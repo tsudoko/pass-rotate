@@ -1,0 +1,114 @@
+#!/usr/bin/env python3
+"""pass-rotate
+
+Usage:
+  pass-rotate [--all] <accounts>...
+  pass-rotate --list
+  pass-rotate --list-providers
+  pass-rotate --list-options <provider>
+
+Options:
+  --all             Rotate all configured accounts
+  --list            Print all configured accounts and exit
+  --list-providers  Print all supported service providers and exit
+  --list-options    Prints options for the specified provider and exit
+  --config=<file>   Specify an alternate config file (default: ~/.config/pass-rotate.ini)
+"""
+
+from passrotate.provider import get_provider, get_providers
+from configparser import ConfigParser
+from docopt import docopt
+import traceback
+import subprocess
+import sys
+import os
+
+args = docopt(__doc__, version='pass-rotate 1.0')
+
+if args["--list-providers"]:
+    providers = sorted(get_providers(), key=lambda p: p.name)
+    print("{:<24} {:<24}\n".format("Domain", "Provider"))
+    for p in providers:
+        for d in p.domains:
+            print("{:<24} {:<24}".format(d, p.name))
+    sys.exit(0)
+
+if args["--list-options"]:
+    provider = get_provider(args["<provider>"])
+    if not provider:
+        print("Unknown provider")
+        sys.exit(1)
+    print(provider.name)
+    print("\nDomains:")
+    for d in provider.domains:
+        print("    {}".format(d))
+    print("\nUsage:")
+    if provider.__doc__.startswith("\n"):
+        print(provider.__doc__[1:].rstrip())
+    else:
+        print(provider.__doc__.rstrip())
+    sys.exit(0)
+
+cfg_path = args.get("config") or os.path.expanduser("~/.config/pass-rotate.ini")
+try:
+    with open(cfg_path) as f:
+        config = ConfigParser()
+        config.readfp(f)
+except Exception as ex:
+    sys.stderr.write(str(ex))
+    sys.stderr.write("\nFailed to read config file.\n")
+    sys.exit(1)
+
+_get_password_cmd = config["pass-rotate"]["get-password"]
+_gen_password_cmd = config["pass-rotate"]["gen-password"]
+
+def get_password(account):
+    env = os.environ
+    env.update({ "ACCOUNT": account })
+    subp = subprocess.run([_get_password_cmd],
+            shell=True, env=env,
+            stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    if subp.returncode != 0:
+        raise Exception("get_password command exited with nonzero status code")
+    return subp.stdout.decode().strip()
+
+def gen_password(account):
+    env = os.environ
+    env.update({ "ACCOUNT": account })
+    subp = subprocess.run([_gen_password_cmd],
+            shell=True, env=env,
+            stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    if subp.returncode != 0:
+        raise Exception("gen_password command exited with nonzero status code")
+    return get_password(account)
+
+errs = 0
+for account in args.get("<accounts>"):
+    if not config.has_section(account):
+        print("Error: No account configured for {}".format(account))
+        errs += 1
+        continue
+    cfg = config[account]
+    domain = cfg.get("domain") or account
+    provider = get_provider(domain)
+    if not provider:
+        print("Error: pass-rotate does not have a service provider for {}".format(domain))
+        errs += 1
+        continue
+    sys.stderr.write("Rotating {}...".format(account))
+    sys.stderr.flush()
+    try:
+        p = provider(dict(cfg))
+        old_password = get_password(account)
+        p.prepare(old_password)
+        new_password = gen_password(account)
+        p.execute(old_password, new_password)
+        sys.stderr.write("OK")
+        sys.stderr.flush()
+    except:
+        sys.stderr.write("FAIL\n")
+        sys.stderr.write(traceback.format_exc())
+        sys.stderr.write("\nFailed to rotate {}\n".format(account))
+        errs += 1
+        sys.stderr.flush()
+sys.exit(errs)
