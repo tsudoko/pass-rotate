@@ -8,6 +8,7 @@ class Linode(Provider):
     """
     [linode.com]
     username=Your Linode username
+    expires=Optional, months till new password expires (0, 1, 3, 6, 12)
     """
     name = "Linode"
     domains = [

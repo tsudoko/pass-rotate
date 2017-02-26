@@ -15,18 +15,21 @@ Options:
   --config=<file>   Specify an alternate config file (default: ~/.config/pass-rotate.ini)
 """
 
-from passrotate.provider import get_provider, get_providers
+from passrotate import PassRotate
 from configparser import ConfigParser
 from docopt import docopt
 import traceback
 import subprocess
 import sys
 import os
+from getpass import getpass
 
 args = docopt(__doc__, version='pass-rotate 1.0')
 
+pass_rotate = PassRotate()
+
 if args["--list-providers"]:
-    providers = sorted(get_providers(), key=lambda p: p.name)
+    providers = sorted(pass_rotate.get_providers(), key=lambda p: p.name)
     print("{:<24} {:<24}\n".format("Domain", "Provider"))
     for p in providers:
         for d in p.domains:
@@ -34,7 +37,7 @@ if args["--list-providers"]:
     sys.exit(0)
 
 if args["--list-options"]:
-    provider = get_provider(args["<provider>"])
+    provider = pass_rotate.get_provider_class(args["<provider>"])
     if not provider:
         print("Unknown provider")
         sys.exit(1)
@@ -82,6 +85,13 @@ def gen_password(account):
         raise Exception("gen_password command exited with nonzero status code")
     return get_password(account)
 
+def custom_prompt(prompt, prompt_type):
+    p = getpass(prompt="\n  " + prompt + ": ")
+    sys.stderr.write("  ")
+    return p
+
+pass_rotate.set_prompt(custom_prompt)
+
 errs = 0
 for account in args.get("<accounts>"):
     if not config.has_section(account):
@@ -90,7 +100,7 @@ for account in args.get("<accounts>"):
         continue
     cfg = config[account]
     domain = cfg.get("domain") or account
-    provider = get_provider(domain)
+    provider = pass_rotate.get_provider(domain, dict(cfg))
     if not provider:
         print("Error: pass-rotate does not have a service provider for {}".format(domain))
         errs += 1
@@ -98,11 +108,10 @@ for account in args.get("<accounts>"):
     sys.stderr.write("Rotating {}... ".format(account))
     sys.stderr.flush()
     try:
-        p = provider(dict(cfg))
         old_password = get_password(account)
-        p.prepare(old_password)
+        provider.prepare(old_password)
         new_password = gen_password(account)
-        p.execute(old_password, new_password)
+        provider.execute(old_password, new_password)
         sys.stderr.write("OK")
         sys.stderr.flush()
     except:

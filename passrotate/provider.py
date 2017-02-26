@@ -1,5 +1,4 @@
 from enum import Enum
-from getpass import getpass
 
 _providers = list()
 _provider_map = dict()
@@ -17,15 +16,6 @@ def get_provider(domain):
 def get_providers():
     return _providers
 
-def _getpass_prompt(prompt, prompt_type):
-    return getpass(prompt=prompt + ": ")
-
-_prompt = _getpass_prompt
-
-def set_prompt(prompt):
-    global _prompt
-    _prompt = prompt
-
 class PromptType(Enum):
     generic = "generic"
     totp = "totp"
@@ -39,7 +29,4 @@ class ProviderOption:
 
 class Provider:
     def prompt(self, prompt, prompt_type):
-        global _prompt
-        return _prompt(prompt, prompt_type)
-
-import passrotate.providers
+        return self._prompt(prompt, prompt_type)
