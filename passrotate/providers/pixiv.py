@@ -10,6 +10,7 @@ class Pixiv(Provider):
     """
     name = "pixiv"
     domains = [
+        "pixiv.net",
         "www.pixiv.net",
         "touch.pixiv.net"
     ]
