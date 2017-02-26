@@ -9,4 +9,4 @@ setup(name="pass-rotate",
         version="1.0",
         scripts=["pass-rotate"],
         packages=["passrotate"],
-        install_requires=["beautifulsoup4", "requests"])
+        install_requires=["beautifulsoup4", "docopt", "requests"])
