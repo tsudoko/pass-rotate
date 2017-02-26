@@ -2,14 +2,11 @@
 """pass-rotate
 
 Usage:
-  pass-rotate [--all] <accounts>...
-  pass-rotate --list
+  pass-rotate <accounts>...
   pass-rotate --list-providers
   pass-rotate --list-options <provider>
 
 Options:
-  --all             Rotate all configured accounts
-  --list            Print all configured accounts and exit
   --list-providers  Print all supported service providers and exit
   --list-options    Prints options for the specified provider and exit
   --config=<file>   Specify an alternate config file (default: ~/.config/pass-rotate.ini)

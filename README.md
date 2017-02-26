@@ -4,6 +4,37 @@ pass-rotate is a library and CLI for rotating passwords on various web services.
 For support, visit [#cmpwn on irc.freenode.net](http://webchat.freenode.net/?channels=cmpwn&uio=d4)
 or file a GitHub issue.
 
+## CLI usage
+
+Copy pass-rotate.ini to `~/.config/pass-rotate.ini` and edit it to your liking.
+You'll have to find a shell command (or write a script) that gets passwords from
+and adds passwords to your password manager. Examples for
+[pass](http://passwordstore.org) are provided in the example config.
+
+Rotate passwords like so:
+
+```
+$ pass-rotate news.ycombinator.com github.com
+Rotating news.ycombinator.com... OK
+Rotating github.com...
+  Enter your two factor (TOTP) code: 
+  OK
+```
+
+Full usage:
+
+```
+Usage:
+  pass-rotate <accounts>...
+  pass-rotate --list-providers
+  pass-rotate --list-options <provider>
+
+Options:
+  --list-providers  Print all supported service providers and exit
+  --list-options    Prints options for the specified provider and exit
+  --config=<file>   Specify an alternate config file (default: ~/.config/pass-rotate.ini)
+```
+
 ## Supported services
 
 Adding new services is easy - [help add more sites](/SirCmpwn/pass-rotate/blog/master/CONTRIBUTING.md)!
@@ -18,38 +49,6 @@ Adding new services is easy - [help add more sites](/SirCmpwn/pass-rotate/blog/m
 ```
 ./setup.py build
 sudo ./setup.py install
-```
-
-## CLI usage
-
-Copy pass-rotate.ini to `~/.config/pass-rotate.ini` and edit it to your liking.
-You'll have to find a shell command (or write a script) that gets passwords from
-and adds passwords to your password manager. Examples for
-[pass](http://passwordstore.org) are provided in the example config.
-
-```
-Usage:
-  pass-rotate [--all] <accounts>...
-  pass-rotate --list
-  pass-rotate --list-providers
-  pass-rotate --list-options <provider>
-
-Options:
-  --all             Rotate all configured accounts
-  --list            Print all configured accounts and exit
-  --list-providers  Print all supported service providers and exit
-  --list-options    Prints options for the specified provider and exit
-  --config=<file>   Specify an alternate config file (default: ~/.config/pass-rotate.ini)
-```
-
-Rotate passwords like so:
-
-```
-$ ./pass-rotate news.ycombinator.com github.com
-Rotating news.ycombinator.com... OK
-Rotating github.com...
-  Enter your two factor (TOTP) code: 
-  OK
 ```
 
 ## Library usage
