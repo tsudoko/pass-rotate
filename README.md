@@ -46,6 +46,7 @@ Options:
 
 For a list of currently supported service, see [the
 wiki](https://github.com/SirCmpwn/pass-rotate/wiki/Currently-supported-services).
+Please help us add more services - it's easy!
 
 ## Installation
 

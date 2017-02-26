@@ -39,7 +39,7 @@ class Twitter(Provider):
         if url.path == "/login/error":
             raise Exception("Current password for Twitter is incorrect")
         if url.path == "/account/locked":
-            raise Exception("Twitter has locked us out of further login attempts")
+            raise Exception("Twitter has locked us out of further login attempts. Wait 60 minutes and try again.")
         while url.path == "/account/login_verification":
             data = get_form(r.text)
             challenge_type = data.get("challenge_type")
@@ -63,9 +63,9 @@ class Twitter(Provider):
             "user_password_confirmation": new_password,
         })
         r = self._session.post("https://twitter.com/settings/passwords/update",
-                data=self._form, headers={
-                    "origin": "https://twitter.com",
-                    "referer": "https://twitter.com/settings/password"
-                })
+            data=self._form, headers={
+                "origin": "https://twitter.com",
+                "referer": "https://twitter.com/settings/password"
+            })
 
 register_provider(Twitter)
