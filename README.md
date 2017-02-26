@@ -44,7 +44,7 @@ Options:
   --config=<file>   Specify an alternate config file (default: ~/.config/pass-rotate.ini)
 ```
 
-For a list of currently supported service, see [the
+For a list of currently supported services, see [the
 wiki](https://github.com/SirCmpwn/pass-rotate/wiki/Currently-supported-services).
 Please help us add more services - it's easy!
 
@@ -64,7 +64,7 @@ functionality.
 ```python
 >>> from passrotate import PassRotate
 >>> pass_rotate = PassRotate()
->>> github = pass_rotate("github.com", { "username": "example" })
+>>> github = pass_rotate.get_provider("github.com", { "username": "example" })
 >>> github.prepare(old_password) # Verifies credentials, prompts for two-factor, etc
 >>> github.execute(old_password, new_password) # Actually changes the password
 ```
