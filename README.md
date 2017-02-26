@@ -1,4 +1,4 @@
-# pass-rotate
+# pass-rotate [![Donate with fosspay](https://drewdevault.com/donate/static/donate-with-fosspay.png)](https://drewdevault.com/donate?project_id=6)
 
 pass-rotate is a library and CLI for rotating passwords on various web services.
 This software makes it easier to rotate your passwords, one at a time or in
