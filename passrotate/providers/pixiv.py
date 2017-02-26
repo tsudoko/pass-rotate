@@ -37,8 +37,6 @@ class Pixiv(Provider):
         if url.path != "/setting_userdata.php":
             raise Exception("Current password for pixiv is incorrect")
         self._form = get_form(r.text, action="setting_userdata.php")
-
-    def execute(self, old_password, new_password):
         self._form.update({
             "check_pass": old_password
         })
@@ -46,6 +44,8 @@ class Pixiv(Provider):
                 data=self._form)
 
         self._form = get_form(r.text, action="setting_userdata.php")
+
+    def execute(self, old_password, new_password):
         self._form.update({
             "new_password_1": new_password,
             "new_password_2": new_password
