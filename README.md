@@ -47,6 +47,7 @@ Options:
 
 Adding new services is easy - [help add more sites](/SirCmpwn/pass-rotate/blog/master/CONTRIBUTING.md)!
 
+* Digital Ocean
 * GitHub
 * Linode
 * Twitter
@@ -83,7 +84,8 @@ which includes the following properties:
   `passrotate.provider.ProviderOption` instances.
 
 You may get a list() of supported provider classes with
-`PassRotate.get_providers()`.
+`PassRotate.get_providers()`, and you can also just directly import specific
+providers from `passrotate.providers`.
 
 ### Prompting for two-factor
 
