@@ -1,4 +1,4 @@
-from passrotate.provider import Provider, ProviderOption, register_provider
+from passrotate.provider import Provider, ProviderOption, PromptType, register_provider
 from passrotate.forms import get_form
 from bs4 import BeautifulSoup
 from urllib.parse import urlparse
@@ -40,9 +40,18 @@ class Linode(Provider):
         r = self._session.post("https://manager.linode.com/session/login", data=form)
         soup = BeautifulSoup(r.text, "html.parser")
         title = soup.find("title")
-        # TODO: TOTP
         if title.text != "Session Engaged!":
             raise Exception("Unable to log into Linode with your current password")
+        r = self._session.get("https://manager.linode.com/linodes")
+        url = urlparse(r.url)
+        if url.path.startswith("/session/twofactor"):
+            code = self.prompt("Enter your two-factor (TOTP) code", PromptType.totp)
+            soup = BeautifulSoup(r.text, "html.parser")
+            form = soup.find("form", attrs={ "id": "CFForm_1" })
+            action = form.get("action", "")
+            r = self._session.post(action, data={
+                "auth_code": code
+            })
         r = self._session.get("https://manager.linode.com/profile/index")
         # Linode has a weird form on this page
         soup = BeautifulSoup(r.text, "html.parser")
