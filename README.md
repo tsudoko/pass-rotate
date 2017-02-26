@@ -3,7 +3,8 @@
 pass-rotate is a library and CLI for rotating passwords on various web services.
 This software makes it easier to rotate your passwords, one at a time or in
 bulk, when security events or routine upkeep of your online accounts makes it
-necessary.
+necessary. This is the first step towards a better future - one where users
+never interact with passwords at all and they're managed entirely by software.
 
 For support, visit [#cmpwn on irc.freenode.net](http://webchat.freenode.net/?channels=cmpwn&uio=d4)
 or file a GitHub issue.
