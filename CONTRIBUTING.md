@@ -44,8 +44,7 @@ class YourProvider(Provider):
 register_provider(YourProvider)
 ```
 
-You'll want to import this file in `passrotate/providers/__init__.py` and add
-your provider to the list in the README.
+You'll want to import this file in `passrotate/providers/__init__.py`.
 
 Then you have to reverse engineer the password reset process for the provider
 you're trying to add. Most providers will want to use requests.Session to keep a

@@ -43,15 +43,8 @@ Options:
   --config=<file>   Specify an alternate config file (default: ~/.config/pass-rotate.ini)
 ```
 
-## Supported services
-
-Adding new services is easy - [help add more sites](/SirCmpwn/pass-rotate/blog/master/CONTRIBUTING.md)!
-
-* Digital Ocean
-* GitHub
-* Linode
-* Twitter
-* YCombinator
+For a list of currently supported service, see [the
+wiki](https://github.com/SirCmpwn/pass-rotate/wiki/Currently-supported-services).
 
 ## Installation
 
