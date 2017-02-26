@@ -26,7 +26,7 @@ class YCombinator(Provider):
             "pw": old_password
         }, allow_redirects=False)
         if "Bad login" in r.text:
-            raise Exception("Unable to log into Hacker News with old password")
+            raise Exception("Unable to log into Hacker News with current password")
         r = self._session.get("https://news.ycombinator.com/changepw")
         self._form = get_form(r.text)
 
