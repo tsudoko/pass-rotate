@@ -1,8 +1,8 @@
-from passrotate.provider import register_provider, ProviderOption
-from bs4 import BeautifulSoup
+from passrotate.provider import Provider, ProviderOption, register_provider
+from passrotate.forms import get_form
 import requests
 
-class YCombinator:
+class YCombinator(Provider):
     """
     [news.ycombinator.com]
     username=Your Hacker News username
@@ -28,9 +28,7 @@ class YCombinator:
         if "Bad login" in r.text:
             raise Exception("Unable to log into Hacker News with old password")
         r = self._session.get("https://news.ycombinator.com/changepw")
-        soup = BeautifulSoup(r.text, "html.parser")
-        hidden_inputs = soup.find_all("input", type="hidden")
-        self._form = { i.get("name", ""): i.get("value", "") for i in hidden_inputs }
+        self._form = get_form(r.text)
 
     def execute(self, old_password, new_password):
         self._form.update({ "oldpw": old_password, "pw": new_password })

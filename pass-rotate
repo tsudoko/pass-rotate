@@ -95,7 +95,7 @@ for account in args.get("<accounts>"):
         print("Error: pass-rotate does not have a service provider for {}".format(domain))
         errs += 1
         continue
-    sys.stderr.write("Rotating {}...".format(account))
+    sys.stderr.write("Rotating {}... ".format(account))
     sys.stderr.flush()
     try:
         p = provider(dict(cfg))
