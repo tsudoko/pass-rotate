@@ -32,9 +32,10 @@ class PromptType(Enum):
     sms = "sms"
 
 class ProviderOption:
-    def __init__(self, type, doc):
+    def __init__(self, type, doc, optional=False):
         self.type = type
         self.doc = doc
+        self.optional = optional
 
 class Provider:
     def prompt(self, prompt, prompt_type):
