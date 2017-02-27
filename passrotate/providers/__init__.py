@@ -1,6 +1,7 @@
 from passrotate.providers.amazon import Amazon
 from passrotate.providers.cloudflare import Cloudflare
 from passrotate.providers.digitalocean import DigitalOcean
+from passrotate.providers.discord import Discord
 from passrotate.providers.github import GitHub
 from passrotate.providers.linode import Linode
 from passrotate.providers.namecheap import Namecheap
