@@ -35,10 +35,12 @@ Full usage:
 ```
 Usage:
   pass-rotate <accounts>...
+  pass-rotate --list-accounts
   pass-rotate --list-providers
   pass-rotate --list-options <provider>
 
 Options:
+  --list-accounts   Print all configured accounts
   --list-providers  Print all supported service providers and exit
   --list-options    Prints options for the specified provider and exit
   --config=<file>   Specify an alternate config file (default: ~/.config/pass-rotate.ini)

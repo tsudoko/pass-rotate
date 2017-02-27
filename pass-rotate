@@ -3,10 +3,12 @@
 
 Usage:
   pass-rotate <accounts>...
+  pass-rotate --list-accounts
   pass-rotate --list-providers
   pass-rotate --list-options <provider>
 
 Options:
+  --list-accounts   Print all configured accounts
   --list-providers  Print all supported service providers and exit
   --list-options    Prints options for the specified provider and exit
   --config=<file>   Specify an alternate config file (default: ~/.config/pass-rotate.ini)
@@ -31,7 +33,7 @@ if args["--list-providers"]:
     for p in providers:
         for d in p.domains:
             print("{:<24} {:<24}".format(d, p.name))
-    sys.exit(0)
+    sys.exit()
 
 if args["--list-options"]:
     provider = pass_rotate.get_provider_class(args["<provider>"])
@@ -47,7 +49,7 @@ if args["--list-options"]:
         print(provider.__doc__[1:].rstrip())
     else:
         print(provider.__doc__.rstrip())
-    sys.exit(0)
+    sys.exit()
 
 cfg_path = args.get("config") or os.path.expanduser("~/.config/pass-rotate.ini")
 try:
@@ -58,6 +60,14 @@ except Exception as ex:
     sys.stderr.write(str(ex))
     sys.stderr.write("\nFailed to read config file.\n")
     sys.exit(1)
+
+if args["--list-accounts"]:
+    accounts = sorted([
+        s for s in config.sections() \
+            if s != "pass-rotate" and pass_rotate.get_provider_class(config[s].get("domain") or s)
+        ])
+    [print(a) for a in accounts]
+    sys.exit()
 
 _get_password_cmd = config["pass-rotate"]["get-password"]
 _gen_password_cmd = config["pass-rotate"]["gen-password"]
