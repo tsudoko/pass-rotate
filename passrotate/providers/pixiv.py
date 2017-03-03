@@ -30,7 +30,7 @@ class Pixiv(Provider):
             "password": old_password
         })
         r = self._session.post("https://accounts.pixiv.net/api/login",
-                data=self._form)
+                params={"lang": "en"}, data=self._form)
         json = r.json()
         if "body" in json and \
            "validation_errors" in json['body']:
@@ -38,6 +38,8 @@ class Pixiv(Provider):
                 raise Exception("Pixiv has locked us out of further login attempts. Try again later.")
             elif json['body']['validation_errors'].get("captcha"):
                 raise Exception("Failed to log into pixiv: captcha authentication required")
+            else:
+                raise Exception("Failed to log into pixiv: {}".format(json['body']['validation_errors']))
 
         r = self._session.get("https://www.pixiv.net/setting_userdata.php",
                 params={"type": "password"})
