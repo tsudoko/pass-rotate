@@ -35,7 +35,7 @@ class Pixiv(Provider):
                 params={"type": "password"})
         url = urlparse(r.url)
         if url.path != "/setting_userdata.php":
-            raise Exception("Current password for pixiv is incorrect")
+            raise Exception("Failed to log into pixiv with current password")
         self._form = get_form(r.text, action="setting_userdata.php")
         self._form.update({
             "check_pass": old_password
